@@ -37,15 +37,16 @@ function initHeatMap(){
         gradient: {
         // enter n keys between 0 and 1 here
         // for gradient color customization
-        '.5': 'blue',
-        '.8': 'green',
-        '.95': 'red'
+        '.2': 'white',
+        '.5': 'green',
+        '.8': 'cyan',
+        '.95': 'blue'
         },
         // the maximum opacity (the value with the highest intensity will have it)
         maxOpacity: 0.9,
         // minimum opacity. any value > 0 will produce
         // no transparent gradient transition
-        minOpacity: 0.1
+        minOpacity: 0.001
     }))
 }
 
@@ -109,6 +110,7 @@ function drawBackGround(url) {
           .style("top", _("margin").top+"px")
 }
 
+
 function drawGrid(data) {
     var svg = d3.select('#parent #graph').append('svg')
         .attr('width', _("width") + _("margin").left + _("margin").right)
@@ -126,16 +128,23 @@ function drawGrid(data) {
             .attr('height', _("gridSizeY") )
             .attr('class', function(d) { return d.x + '-' + d.y })
             .style('fill', function(d) { return _("colors")[+d.type] })
-            .style('fill-opacity', 0.5)
+            .style('fill-opacity', 0.2)
             .style('stroke', '#000')
             .style('stroke-opacity', 0.2)
             .classed('selected', false)
             .on('mouseover', function(d) { d3.select(this).classed('hover', true) })
             .on('mouseout', function(d) { d3.select(this).classed('hover', false) })
             .on('click', function(d) {
-                selected = d3.select(this)
-                selected.classed('selected', true);
-                console.log(d);
+                selection = d3.select(this)[0][0].classList
+                if (d3.values(selection).indexOf('selected') < 0 )
+                    d3.select(this).classed('selected', true);
+                else
+                    d3.select(this).classed('selected', false);
+
+                var x = (d.x *_("gridSizeX")) + 50,
+                    y = (24 - d.y) *_("gridSizeY") + 50;
+                var val = _('heatmapInstance').getValueAt({ x: x, y:y })
+                console.log(d, x, y, val);
             })
 }
 
@@ -144,6 +153,7 @@ function drawHeatMap(hasTime) {
 
     // now generate some random data
     var points = [];
+    var min = 100000;
     var max = 0;
     var width = 840;
     var height = 400;
@@ -153,6 +163,7 @@ function drawHeatMap(hasTime) {
             T.forEach(function(row){
                 row.forEach(function(obj) {
                     max = max < obj.depth? obj.depth : max;
+                    min = min > obj.depth? obj.depth : min;
                     points.push({
                         x: (obj.x *_("gridSizeX")) + 50 ,
                         y: (24 - obj.y) *_("gridSizeY") + 50,
