@@ -1,5 +1,6 @@
 #parent {
   position: relative;
+  left: 300px;
 }
 
 #graph {
@@ -33,9 +34,9 @@
 #slider {
   position: absolute;
   width: 1000px;
-  top: 1100px;
-  /*left: 50px;*/
+  top: 1000px;
   z-index: 120;
+  /*left: 50px;*/
 }
 
 
