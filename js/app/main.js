@@ -19,7 +19,6 @@ function Start() {
 
 function OnCreate(error, grid, data, maxData) {
 
-
     configureData(data, maxData);
 
     LayoutDraw(grid)
@@ -57,48 +56,4 @@ function configureData(data, mdata) {
     _('dataMatrix', matrix)
     console.log(_("dataByTime"));
     console.log("dataMatrix", _('dataMatrix').length, _('dataMatrix'));
-}
-
-
-
-
-function drawHeatMap(hasTime) {
-
-    // now generate some random data
-    var points = [];
-    var min = 100000;
-    var max = 0;
-    var width = 840;
-    var height = 400;
-
-    if (hasTime) {
-        _('activeData').forEach(function(T){
-            T.forEach(function(row){
-                row.forEach(function(obj) {
-                    max = max < obj.depth? obj.depth : max;
-                    min = min > obj.depth? obj.depth : min;
-                    points.push({
-                        x: (obj.x *_("gridSizeX")) + 50 ,
-                        y: (24 - obj.y) *_("gridSizeY") + 50,
-                        value: obj.depth,
-                        radius: 50
-                    })
-                })
-            })
-        })
-    } else {
-        _('activeData').forEach(function(obj, i) {
-            max = max < obj.depth? obj.depth : max;
-            points.push({
-                x: (obj.x *_("gridSizeX")) + 50 ,
-                y: (24 - obj.y) *_("gridSizeY") + 50,
-                value: obj.depth,
-                radius: 50
-            })
-        })
-    }
-
-    // if you have a set of datapoints always use setData instead of addData
-    // for data initialization
-    _("heatmapInstance").setData({ max: max, data: points }).repaint();
 }

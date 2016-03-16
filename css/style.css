@@ -63,6 +63,8 @@
     stroke-opacity: 1!important;
 }
 
+
+
 .axis path,
 .axis line {
   fill: none;
@@ -71,7 +73,7 @@
 }
 
 .axis text {
-  font: 10px sans-serif;
+  font: 14px sans-serif;
 }
 
 .dots {

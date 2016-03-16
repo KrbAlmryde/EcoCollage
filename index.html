@@ -1,44 +1,40 @@
 <!DOCTYPE html>
 <html>
-<head>
-    <title>EcoCollage Visualization</title>
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+    <head>
+        <title>EcoCollage Controller</title>
+        <meta name="description" content="EcoCollage visualization controller thingy">
 
-    <link rel="stylesheet" type="text/css" href="css/style.css">
-</head>
-<body>
-    <!-- <div id="datakey">
-        <table border="1" cellspacing="0" cellpadding="6px" width="1861" height="242"><tbody><tr><td><strong>Field name</strong></td><td>id</td><td>studyID</td><td>trialID</td><td>map</td><td>publicCost</td><td>privateCost</td><td>publicDamages</td><td>privateDamages</td><td>publicMaintenanceCost</td><td>privateMaintenanceCost</td><td>standingWater</td><td>impactNeighbors</td><td>sewerLoad</td><td>infiltration</td><td>efficiency</td><td>maxWaterHeights</td><td>dollarsPerGallon</td></tr><tr><td><strong>Description</strong></td><td>int unique identifier; auto-incremented</td><td>int representing a group of trials&nbsp;</td><td>int representing the specific trial</td><td>string composed of three int coordinates, where the first in represents the type of land-cover and the second int is x and the third int is y. spaces delimit the coordinates</td><td>int of installation cost on public property</td><td>int of installation on private property</td><td>int of damages to public property</td><td>int of damages to private property</td><td>int of maintenance cost of installations on public property</td><td>int of maintenance cost of installations on private property</td><td>longtext of each cell's amount of water at each time point, formatted: time x-position y-position water-Height (newline)</td><td>float percentage of rainwater that flows to neighbors</td><td>float percentage of rainwater handled by the sewers</td><td>float percentage of rainwater infiltrated or stored by interventions</td><td>longtext amount full each type of infrastructure is at each time step in format: infrastructure-type time percentCapacity (newline)</td><td>longtext of the highest the water is at any point in the simulation for each cell, in format 48 x-pos y-pos amount-of-water</td><td>float dollars per gallon of water processed/ stored/infiltrated</td></tr></tbody></table>
-    </div>
- -->
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
 
- <div style="width: 100%; display: table;">
-    <div style="display: table-row">
-<!--         <div style="width: 600px; display: table-cell;"> Left </div>
-        <div style="display: table-cell;"> Right </div> -->
-        <div id='layerControl'></div>
-        <div id="parent">
-            <div id='background'></div>
-            <div id='graph'></div>
-            <div id='layers'></div>
-            <div id="slider"></div>
+        <link rel="stylesheet" type="text/css" href="css/style.css">
+
+    </head>
+    <body>
+         <div style="width: 100%; display: table;">
+            <div style="display: table-row">
+                <div id='layerControl'></div>
+                <div id="parent">
+                    <div id='background'></div>
+                    <div id='graph'></div>
+                    <div id='layers'></div>
+                    <div id="slider"></div>
+                </div>
+            </div>
         </div>
-    </div>
-</div>
 
 
-    <!-- External Libraries -->
-    <script type="text/javascript" src="js/node_modules/d3/d3.js"></script>
-    <script type="text/javascript" src="js/node_modules/d3-queue/build/d3-queue.js"></script>
-    <script type="text/javascript" src="js/node_modules/heatmap.js/heatmap.js"></script>
-    <script type="text/javascript" src="js/node_modules/leaflet/dist/leaflet.js"></script>
+        <!-- External Libraries -->
+        <script type="text/javascript" src="js/lib/d3/d3.js"></script>
+        <script type="text/javascript" src="js/lib/d3-queue/build/d3-queue.js"></script>
+        <script type="text/javascript" src="js/lib/heatmap.js/heatmap.js"></script>
+        <script type="text/javascript" src="js/lib/nutella/nutella_lib.js"></script>
 
-    <!-- Main Application logic -->
-    <script type="text/javascript" src="js/app/utils.js"></script>
-    <script type="text/javascript" src="js/app/layout.js"></script>
-    <script type="text/javascript" src="js/app/controller.js"></script>
-    <script type="text/javascript" src="js/app/main.js" onload="Start()"></script>
-</body>
+        <!-- Main Application logic -->
+        <script type="text/javascript" src="js/app/utils.js"></script>
+        <script type="text/javascript" src="js/app/controller.js"></script>
+        <script type="text/javascript" src="js/app/layout.js"></script>
+        <script type="text/javascript" src="js/app/main.js" onload="Start()"></script>
+    </body>
 </html>

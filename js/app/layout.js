@@ -20,6 +20,7 @@ function LayoutButtons() {
           .style("position","absolute")
           .style("top", function(d, i) { return _("margin").top+50 + (200*i) +"px" })
           .classed("unselected", true)
+          .on("mouseover", function(d){ console.log(d)} )
           .on("click", function(d){
                 // need to highlight that the layer has been selected
                 // set the stroke level to really high or something..
@@ -45,19 +46,21 @@ function LayoutHeatMap(){
         // backgroundColor to cover transparent areas
         backgroundColor: 'rgba(0,0,0,0)',
         // custom gradient colors
-        gradient: {
-        // enter n keys between 0 and 1 here
-        // for gradient color customization
-        '.2': 'white',
-        '.5': 'green',
-        '.8': 'cyan',
-        '.95': 'blue'
-        },
+        // gradient: {
+        // // enter n keys between 0 and 1 here
+        // // for gradient color customization
+        // '.2': 'white',
+        // '.5': 'green',
+        // '.8': 'cyan',
+        // '.95': 'blue'
+        // },
         // the maximum opacity (the value with the highest intensity will have it)
         maxOpacity: 0.9,
         // minimum opacity. any value > 0 will produce
         // no transparent gradient transition
-        minOpacity: 0.001
+        minOpacity: 0.001,
+        blur: .75
+
     }))
 }
 
@@ -117,7 +120,7 @@ function LayoutBrush() {
     var centering = false, center, alpha = .2;
 
     var x = d3.scale.linear()
-        .domain( [0, 48] )
+        .domain( [0, 24] )
         .rangeRound( [ 0, _('gridSizeX')*23 ] )
 
     _('brush', d3.svg.brush()
@@ -138,13 +141,23 @@ function LayoutBrush() {
       .append('g')
         .attr('transform', 'translate(' + _("margin").left + ',' + _("margin").top + ')')
 
+    // svg.append("rect")
+    //     .attr("class", "grid-background")
+    //     .attr("width", _('gridSizeX')/2)
+    //     .attr("height", _('gridSizeY'));
+
     svg.append("g")
         .attr("class", "x axis")
-        .attr("transform", "translate(0," + _('gridSizeY') + ")")
+        .attr("transform", "translate(0," + 20 + ")")
         .call(d3.svg.axis()
                 .scale(x)
                 .orient("bottom")
-                .ticks(25, 's'));
+                .ticks(25, 's'))
+        .selectAll("text")
+            .text(function(d) { return 2* d})
+            // .style("text-anchor", null);
+
+                // .tickSize(-_('gridSizeY')));
 
 
     var gBrush = svg.append('g')
@@ -168,6 +181,18 @@ function LayoutBrush() {
     // This is our actual temporal selection event controller.
     // We will want to give it the matrix, and see
     function brushmove() {
+          // var extent = _('brush').extent();
+          // _('activeData', _("dataMatrix").filter(function(d,i) {
+
+          //   var extent0 = Math.round(extent[0])%2 === 0? Math.round(extent[0]) : Math.round(extent[0])-1
+          //   var extent1 = Math.round(extent[1])%2 === 0? Math.round(extent[1]) : Math.round(extent[1])+1
+
+          //   console.log(extent0, i*2, extent1, extent0 <= i*2 && i*2 <= extent1);
+          //   return  Math.round(extent[0]) <= i && i <=  Math.round(extent[1])
+          // }));
+          // // dot.classed("selected", function(d) { return extent[0] <= d && d <= extent[1]; });
+          // // console.log(extent, _('activeData'));
+          // drawHeatMap(true);
           var extent = _('brush').extent();
           _('activeData', _("dataMatrix").filter(function(d,i) {
             return Math.round(extent[0]) <= i*2 && i*2 <= Math.round(extent[1])
@@ -223,9 +248,9 @@ function LayoutBrush() {
             var extent = _('brush').extent(),
                 size = extent[1] - extent[0],
                 center1 = center * alpha + (extent[0] + extent[1]) / 2 * (1 - alpha);
-
             if (!(centering = Math.abs(center1 - center) > 1e-3)) center1 = center;
 
+            console.log("recenter", size, center, center1);
             gBrush
                 .call(_('brush').extent([center1 - size / 2, center1 + size/2]))
                 .call(_('brush').event);
