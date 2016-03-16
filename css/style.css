@@ -1,6 +1,13 @@
+#layerControl{
+  display: table-cell;
+  /*position: relative;*/
+  width: 300px
+}
+
 #parent {
+  display: table-cell;
   position: relative;
-  left: 300px;
+  /*left: 300px;*/
 }
 
 #graph {
@@ -39,7 +46,12 @@
   /*left: 50px;*/
 }
 
-
+/*#layerControl {
+  position: relative;
+  width: 500px;
+  height: 1000px;
+}
+*/
 .selected {
     fill:yellow!important;
 }
