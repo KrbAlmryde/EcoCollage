@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>EcoCollage Map Layer</title>
+    <meta name="description" content="EcoCollage Map visualizer">
+    <link rel="stylesheet" type="text/css" href="css/style.css" media="screen" />
+</head>
+
+<body>
+
+    <div id="parent">
+        <div id="chart"></div>
+        <div id="heatmap"></div>
+    </div>
+
+
+    <!-- Library code -->
+    <script type="text/javascript" src="js/lib/d3.v3.min.js"></script>
+    <script type="text/javascript" src="js/lib/d3-queue/build/d3-queue.js"></script>
+    <script type="text/javascript" src="js/lib/heatmap.js/heatmap.js"></script>
+    <script type="text/javascript" src="js/lib/nutella_lib.js"></script>
+
+    <!-- Main app -->
+    <script type="text/javascript" src="js/app/utils.js"></script>
+    <script type="text/javascript" src="js/app/main.js" onload="Start()"></script>
+</body>
+
+</html>
