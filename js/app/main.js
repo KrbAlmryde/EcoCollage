@@ -6,7 +6,7 @@ function Start() {
     _("height", 1000 - _("margin").top - _("margin").bottom )
     _("gridSizeX", Math.floor( _("width") / 23 ) )
     _("gridSizeY", Math.floor( _("width") / 25 ) )
-    _("colors", ['#e7e8e9', '#e1ecf8', '#e3f1da', "fef5df"] )
+    _("colors", ['#e7e8e9', '#e1ecf8', '#e3f1da', "#fef5df"] )
 
 
     _("queue")
@@ -19,6 +19,7 @@ function Start() {
 
 function OnCreate(error, grid, data, maxData) {
 
+    initNutellaComponents();
     configureData(data, maxData);
 
     LayoutDraw(grid)
@@ -57,3 +58,5 @@ function configureData(data, mdata) {
     console.log(_("dataByTime"));
     console.log("dataMatrix", _('dataMatrix').length, _('dataMatrix'));
 }
+
+

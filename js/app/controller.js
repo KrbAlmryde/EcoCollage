@@ -1,5 +1,10 @@
 // Controller.js
 
+function publishMessage(channel, message) {
+    console.log("publishing a message on channel", channel, message);
+    nutella.net.publish(channel, message);
+}
+
 
 function filterByTime() {
       var extent = _('brush').extent();
@@ -20,7 +25,15 @@ function filterByTime() {
 
 function mapExtent() { console.log("Implement me!!")};
 function mapOnset() { console.log("Implement me!!")};
-function mapDepth() { console.log("Implement me!!")};
+
+
+function mapDepth() {
+
+    // console.log("Implement me!!")
+    publishMessage("projection-layer", {note: 'Inbound Data!', data:_("activeData")[0] } )
+    // publishMessage("ambient-layer", _("activeData") )
+
+};
 
 function mapPersistence() {
     var data
@@ -137,6 +150,7 @@ function drawHeatMap(hasTime) {
     } else {
         _('activeData').forEach(function(obj, i) {
             max = max < obj.depth? obj.depth : max;
+            min = min > obj.depth? obj.depth : min;
             points.push({
                 x: (obj.x *_("gridSizeX")) + 50 ,
                 y: (24 - obj.y) *_("gridSizeY") + 50,
