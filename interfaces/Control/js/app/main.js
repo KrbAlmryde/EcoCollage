@@ -7,7 +7,7 @@ function Start() {
     _("gridSizeX", Math.floor( _("width") / 23 ) )
     _("gridSizeY", Math.floor( _("width") / 25 ) )
     _("colors", ['#e7e8e9', '#e1ecf8', '#e3f1da', "#fef5df"] )
-
+    _("mappingType", 1);  // 0: depth, 1: persistence, 2: extent, 3: onset
 
     _("queue")
         .defer(d3.tsv, 'js/assets/grid.tsv')

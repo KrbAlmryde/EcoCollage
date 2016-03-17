@@ -75,34 +75,30 @@ function LayoutHeatMap(){
 }
 
 
+// Heat map should simply take data provided and render it. Not have to compute it
 function drawHeatMap(config, data) {
 
     console.log('projection: drawHeatMap', data, config);
     // now generate some random data
-    var points = [];
-    var min = 0;
-    var max = 6.0;
-    var width = 840;
-    var height = 400;
+    // var points = [];
+    // var min = 0;
+    // var max = 6.0;
 
+    // data.forEach(function(T){
+    //     T.forEach(function(row){
+    //         row.forEach(function(obj) {
+    //             max = max < +obj.depth? +obj.depth : max;
+    //             points.push({
+    //                 x: (+obj.x *_("gridSizeX")) + 50 ,
+    //                 y: (24 - +obj.y) *_("gridSizeY") + 50,
+    //                 value: +obj.depth,
+    //                 radius: 50
+    //             })
+    //         })
+    //     })
+    // })
 
-
-
-    data.forEach(function(T){
-        T.forEach(function(row){
-            row.forEach(function(obj) {
-                max = max < +obj.depth? +obj.depth : max;
-                points.push({
-                    x: (+obj.x *_("gridSizeX")) + 50 ,
-                    y: (24 - +obj.y) *_("gridSizeY") + 50,
-                    value: +obj.depth,
-                    radius: 50
-                })
-            })
-        })
-    })
-
-    console.log("points", points, max);
-    _("heatmapInstance").setData({ max: max, min: min, data: points })
+    console.log("points");
+    _("heatmapInstance").setData( data )
     _("heatmapInstance").configure(config)
 }

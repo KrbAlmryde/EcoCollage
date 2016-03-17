@@ -4,6 +4,12 @@
   width: 300px
 }
 
+#interfaceControl{
+  display: table-cell;
+  /*position: relative;*/
+  width: 300px
+}
+
 #parent {
   display: table-cell;
   position: relative;

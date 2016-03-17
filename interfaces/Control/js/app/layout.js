@@ -37,6 +37,31 @@ function LayoutButtons() {
                 var selectedImg = d3.select("img.layer-"+d)
               // addRemoveSelection(selectedImg);
           });
+
+    d3.select("#interfaceControl")
+        .selectAll(".button")
+            .data(['send-button.svg', "start.png"]).enter()
+        .append('img')
+          .attr("src", function(d) { return "js/assets/"+d } )
+          .attr("width", "10%")
+          .attr("height", "20%")
+          .style("position","absolute")
+          .style("top", function(d, i) { return _("margin").top+50 + (200*i) +"px" })
+          .on('click', function(d, i) {
+
+                _('publish', true);
+
+                switch(i) {
+                    case 0:
+                        drawDataToMap();
+                        break;
+                    default:
+                        console.log("Not Implemented yet");
+                }
+
+                _('publish', false);
+          })
+
 }
 
 function LayoutHeatMap(){
@@ -45,15 +70,6 @@ function LayoutHeatMap(){
         container: document.querySelector('#parent #layers'),
         // backgroundColor to cover transparent areas
         backgroundColor: 'rgba(0,0,0,0)',
-        // custom gradient colors
-        // gradient: {
-        // // enter n keys between 0 and 1 here
-        // // for gradient color customization
-        // '.2': 'white',
-        // '.5': 'green',
-        // '.8': 'cyan',
-        // '.95': 'blue'
-        // },
         // the maximum opacity (the value with the highest intensity will have it)
         maxOpacity: 0.9,
         // minimum opacity. any value > 0 will produce
@@ -141,11 +157,6 @@ function LayoutBrush() {
       .append('g')
         .attr('transform', 'translate(' + _("margin").left + ',' + _("margin").top + ')')
 
-    // svg.append("rect")
-    //     .attr("class", "grid-background")
-    //     .attr("width", _('gridSizeX')/2)
-    //     .attr("height", _('gridSizeY'));
-
     svg.append("g")
         .attr("class", "x axis")
         .attr("transform", "translate(0," + 20 + ")")
@@ -153,12 +164,6 @@ function LayoutBrush() {
                 .scale(x)
                 .orient("bottom")
                 .ticks(25, 's'))
-        // .selectAll("text")
-        //     .text(function(d) { return 2* d})
-            // .style("text-anchor", null);
-
-                // .tickSize(-_('gridSizeY')));
-
 
     var gBrush = svg.append('g')
         .attr('class', 'brush')
@@ -181,22 +186,8 @@ function LayoutBrush() {
     // This is our actual temporal selection event controller.
     // We will want to give it the matrix, and see
     function brushmove() {
-          // var extent = _('brush').extent();
-          // _('activeData', _("dataMatrix").filter(function(d,i) {
-
-          //   var extent0 = Math.round(extent[0])%2 === 0? Math.round(extent[0]) : Math.round(extent[0])-1
-          //   var extent1 = Math.round(extent[1])%2 === 0? Math.round(extent[1]) : Math.round(extent[1])+1
-
-          //   console.log(extent0, i*2, extent1, extent0 <= i*2 && i*2 <= extent1);
-          //   return  Math.round(extent[0]) <= i && i <=  Math.round(extent[1])
-          // }));
-          // // dot.classed("selected", function(d) { return extent[0] <= d && d <= extent[1]; });
-          // // console.log(extent, _('activeData'));
-          // drawHeatMap(true);
         filterByTime()
-          // dot.classed("selected", function(d) { return extent[0] <= d && d <= extent[1]; });
-          // console.log(extent, _('activeData'));
-        drawHeatMap({});
+        drawDataToMap();
     }
 
     function brushend() {

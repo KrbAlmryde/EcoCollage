@@ -26,12 +26,127 @@ function filterByTime() {
 }
 
 
+function drawDataToMap() {
+    switch( _("mappingType") ){
+        case 0:
+            mapExtent();
+            break;
+        case 1:
+            mapPersistence();
+            break;
+        case 2:
+            mapOnset()
+            break;
+        case 3:
+            mapDepth();
+            break;
+        default:
+            break;
+    }
+}
 
-function mapExtent() { console.log("Implement me!!")};
-function mapOnset() { console.log("Implement me!!")};
+
+
+function mapExtent() {
+    _("mappingType", 0)
+    console.log("Implement me!!")
+};
+
+
+
+function mapPersistence() {
+    _("mappingType", 1)
+
+    var config = {
+        // backgroundColor to cover transparent areas
+        backgroundColor: 'rgba(0,0,0,0)',
+        // custom gradient colors
+        gradient: {
+        // enter n keys between 0 and 1 here
+        // for gradient color customization
+        '.2': 'white',
+        '.5': 'green',
+        '.8': 'yellow',
+        '.95': 'red'
+        },
+        // the maximum opacity (the value with the highest intensity will have it)
+        maxOpacity: .5,
+        // minimum opacity. any value > 0 will produce
+        // no transparent gradient transition
+        minOpacity: 0.0001
+    }
+
+    var data = calculatePersistence();
+    drawPersistence(config, data)
+
+
+    function calculatePersistence() {
+        var ndata = d3.range(23).map(function() {
+            return Array.apply(null, Array(25)).map(Number.prototype.valueOf,0);
+        })
+
+        console.log('calculatePersistence', _('activeData'));
+
+        _('activeData').forEach(function(T){
+            T.forEach(function(row){
+                row.forEach(function(obj) {
+                    var val = 0;
+                    if (+obj.depth >= 6.0) val = 1
+                    ndata[+obj.x][+obj.y] += val;
+                    // console.log(+obj.x, +obj.y, ndata[+obj.x][+obj.y], "ndata", +obj.depth);
+                })
+            })
+        })
+        return ndata;
+    }
+
+
+    function drawPersistence(config, data) {
+        console.log("drawPersistence", data);
+        // now generate some random data
+        var points = [];
+        var min = 0.0;
+        var max = 6.0;
+
+        data.forEach(function(row, i){
+            row.forEach(function(obj, j) {
+                max = max < +data[i][j]? +data[i][j] : max;
+                min = min > +data[i][j]? +data[i][j] : min;
+                points.push({
+                    x: (i *_("gridSizeX")) + 50 ,
+                    y: (24 - j) *_("gridSizeY") + 50,
+                    value: +data[i][j],
+                    radius: 50
+                })
+                console.log(data[i][j]);
+            })
+        })
+
+        console.log("points", max);
+        // if you have a set of datapoints always use setData instead of addData
+        // for data initialization
+        var datapoints = { max: max, min:min, data: points }
+        _("heatmapInstance").setData(datapoints)
+        _("heatmapInstance").configure(config)
+
+        if (_('publish'))
+            publishMessage("projection-layer", {note: 'Inbound Data!', config: config, data: datapoints } )
+
+    }
+
+}
+
+
+function mapOnset() {
+    _("mappingType", 2)
+    console.log("Implement me!!")
+};
+
 
 
 function mapDepth() {
+    _("mappingType", 3)
+
     var config = {
         // backgroundColor to cover transparent areas
         backgroundColor: 'rgba(0,0,0,0)',
@@ -51,60 +166,22 @@ function mapDepth() {
         minOpacity: .3
     }
 
-    drawHeatMap(config);
-    console.log("_(activeData)[0]", _("activeData")[0], _("activeData"))
-    publishMessage("projection-layer", {note: 'Inbound Data!', config: config, data:_("activeData") } )
+    drawDepthMap(config);
+    // publishMessage("projection-layer", {note: 'Inbound Data!', config: config, data:_("activeData") } )
     // publishMessage("ambient-layer", _("activeData") )
 
-};
+    function drawDepthMap(config) {
 
-function mapPersistence() {
-    var data
-}
+        // now generate some random data
+        var points = [];
+        var min = 0.0;
+        var max = 6.0;
 
-
-function calculatePersistence() {
-    var ndata = d3.range(23).map(function() {
-        return Array.apply(null, Array(25)).map(Number.prototype.valueOf,0);
-    })
-
-    if (_("activeData").length > 1) {
-        _("activeData").forEach(function(time) {
-            time.forEach(function(row){
-                // console.log("time", time, "row", row);
-            })
-        })
-    } else {
-        _("activeData")[0].forEach(function(row) {
-            // console.log("row", row);
-            row.forEach(function(d){
-                // console.log("d", d);
-                ndata[+d.x][+d.y] += +d.depth >= 6.0 ? 1 : 0;
-            })
-        })
-    }
-    return ndata;
-}
-
-
-
-function drawHeatMap(config) {
-
-    // now generate some random data
-    var points = [];
-    var min = 0.0;
-    var max = 6.0;
-    var width = 840;
-    var height = 400;
-
-/*
-    if (_('activeData').length > 1) {
         _('activeData').forEach(function(T){
             T.forEach(function(row){
                 row.forEach(function(obj) {
                     max = max < obj.depth? obj.depth : max;
                     min = min > obj.depth? obj.depth : min;
-                    console.log("time, max", max);
                     points.push({
                         x: (obj.x *_("gridSizeX")) + 50 ,
                         y: (24 - obj.y) *_("gridSizeY") + 50,
@@ -114,22 +191,28 @@ function drawHeatMap(config) {
                 })
             })
         })
-    } else {
-        _('activeData')[0].forEach(function(row) {
-            row.forEach(function(obj, i) {
-                max = max < obj.depth? obj.depth : max;
-                min = min > obj.depth? obj.depth : min;
-                console.log("single, max", max);
-                points.push({
-                    x: (obj.x *_("gridSizeX")) + 50 ,
-                    y: (24 - obj.y) *_("gridSizeY") + 50,
-                    value: obj.depth,
-                    radius: 50
-                })
-            })
-        })
+
+        console.log("points", max);
+        // if you have a set of datapoints always use setData instead of addData
+        // for data initialization
+        var datapoints = { max: max, min:min, data: points }
+        _("heatmapInstance").setData( datapoints )
+        _("heatmapInstance").configure(config)
+
+        if (_('publish'))
+            publishMessage("projection-layer", {note: 'Inbound Data!', config: config, data: datapoints } )
     }
-*/
+};
+
+
+
+
+function drawHeatMap(config) {
+    // now generate some random data
+    var points = [];
+    var min = 0.0;
+    var max = 6.0;
+
     _('activeData').forEach(function(T){
         T.forEach(function(row){
             row.forEach(function(obj) {
@@ -151,3 +234,4 @@ function drawHeatMap(config) {
     _("heatmapInstance").setData({ max: max, min:min, data: points })
     _("heatmapInstance").configure(config)
 }
+
