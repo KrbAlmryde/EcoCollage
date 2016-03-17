@@ -79,6 +79,8 @@ var current, times;
               .attr("width", gridSize)
               .attr("height", gridSize)
               .style("fill", colors[0]);
+              console.log(gridSize);
+
 
           cards.transition().duration(2000)
               .style("fill", function(d) { return colorScale(d.depth); });
@@ -88,7 +90,7 @@ var current, times;
   cards.append('title')
     .attr("font-family", "sans-serif")
     .attr("font-size", "100px")
-    .attr("fill", "red")
+    .style("fill", "red")
     .text(' ');
    
 
@@ -96,16 +98,33 @@ var current, times;
           .on('mouseover',function(d) {
         d3.select(this).select('title')
           .text(function(d) { return "depth = " +Math.floor(d.depth,10); })
+          
+          // d3.select(this).style('fill','red');
 
            
-          .select('rect')
-          .attr("width", gridSize+1)
-          .attr("height", gridSize+1)
-          .style({
-            "stroke": "#000",
-            "stroke-width": 5
-          })
+          d3.select(this)
+          // .attr('hover', true)
+          .style("fill-opacity", 0.2)
+          // .style({
+          //   "stroke": "#000",
+          //   "stroke-width": 2
+          // })
         });
+
+          svg.selectAll('rect')
+             .on('mouseout', function(d){
+
+            d3.select(this)
+            
+          
+          .style("fill-opacity" ,1)
+
+
+          .select('text')
+          .text('')
+
+
+             });
 
           // cards.select("title").text(function(d) { return d.depth; });
           
