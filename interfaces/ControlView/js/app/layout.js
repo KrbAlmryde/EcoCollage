@@ -124,7 +124,9 @@ function LayoutGrid(data) {
 
                 var x = (d.x *_("gridSizeX")) + 50,
                     y = (24 - d.y) *_("gridSizeY") + 50;
-                var val = _('heatmapInstance').getValueAt({ x: x, y:y })
+                var val = parseInt(_('heatmapInstance').getValueAt({ x: x, y:y }))
+                console.log("val is?", val);
+                publishMessage('ambient-layer', val);
                 console.log(d, x, y, val);
             })
 }

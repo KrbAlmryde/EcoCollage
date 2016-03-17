@@ -35,7 +35,6 @@ function initNutellaComponents() {
     // Parse the query parameters
     var query_parameters = NUTELLA.parseURLParameters();
     console.log(query_parameters);
-    wallscopeId = query_parameters.wallscope;
 
     // console.log('wallscope: ' + wallscopeId)
 
@@ -75,5 +74,5 @@ function adminMessageCallBack(message, from) {
 
     // 1. Subscribing to a channel
     console.log("Message from", from.component_id, ":", message);
-    drawHeatMap(message.config, message.data);
+    _("floodGauge").update(+message.data);
 }

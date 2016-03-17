@@ -54,7 +54,7 @@ function loadLiquidFillGauge(value) {
          .attr("width", 800)
          .attr("height", 1200)
          .attr('transform','translate('+120+','+ -100+')')
-         .attr("src", "js/assets/house.jpeg ")  //xlink:href
+         .attr("xlink:href", "js/assets/flowerpot.png ")  //
          console.log(locationY + " " + locationX)
 
     var waveHeightScale;
@@ -230,6 +230,25 @@ function loadLiquidFillGauge(value) {
 
     function GaugeUpdater(){
         this.update = function(value){
+            console.log("value WAS", value);
+            if (value < 24.0){
+                value = (value / 24) * 100; // convert the value to normalized coordinates
+                d3.select("image").attr("xlink:href", "js/assets/flowerpot.png")
+
+            } else if (value < 36.0 && value > 24.0) {
+                value = (value / 36) * 100; // convert the value to normalized coordinates
+                d3.select("image").attr("xlink:href", "js/assets/man_smile.png")
+
+            } else if (value > 36.0 && value < 72.0) {
+                value = (value / 72) * 100; // convert the value to normalized coordinates
+                d3.select("image").attr("xlink:href", "js/assets/man_sad.png")
+
+            } else {
+                value = (value / 360) * 100; // convert the value to normalized coordinates
+                d3.select("image").attr("xlink:href", "js/assets/house.png")
+            }
+            console.log("value is", value);
+
             var newFinalValue = parseFloat(value).toFixed(2);
             var textRounderUpdater = function(value){ return Math.round(value); };
             if(parseFloat(newFinalValue) != parseFloat(textRounderUpdater(newFinalValue))){
