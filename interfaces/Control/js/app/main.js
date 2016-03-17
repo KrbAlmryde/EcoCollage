@@ -34,11 +34,18 @@ function OnCreate(error, grid, data, maxData) {
 
 
 function configureData(data, mdata) {
-    var nest = d3.nest()
+    console.log(data);
+    data.forEach(function(d) {
+        d.depth = +d.depth
+        d.time = +d.time
+        d.x = +d.x
+        d.y = +d.y
+    })
+    var nestByTime = d3.nest()
         .key(function(d) { return d.time })
         .entries(data)
 
-    var matrix = nest.map(function(dBt) {
+    var matrix = nestByTime.map(function(dBt) {
         var nData = d3.range(23).map(function(d) { return d3.range(25) })
 
         dBt.values.forEach(function(d) { nData[+d.x][+d.y] = d })
@@ -53,7 +60,7 @@ function configureData(data, mdata) {
     })
 
 
-    _("dataByTime", nest)
+    _("dataByTime", nestByTime)
     _('dataMatrix', matrix)
     console.log(_("dataByTime"));
     console.log("dataMatrix", _('dataMatrix').length, _('dataMatrix'));

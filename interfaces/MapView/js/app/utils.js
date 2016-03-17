@@ -74,9 +74,8 @@ function publishMessage(channel, message) {
 function adminMessageCallBack(message, from) {
 
     console.log('THE MESSAGE', message);
-    // ['increase','decrease','colonize','kill'];
 
     // 1. Subscribing to a channel
     console.log("Message from", from.component_id, ":", message);
-    drawHeatMap(message.data);
+    drawHeatMap(message.config, message.data);
 }

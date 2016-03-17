@@ -120,7 +120,7 @@ function LayoutBrush() {
     var centering = false, center, alpha = .2;
 
     var x = d3.scale.linear()
-        .domain( [0, 24] )
+        .domain( [0, 48] )
         .rangeRound( [ 0, _('gridSizeX')*23 ] )
 
     _('brush', d3.svg.brush()
@@ -153,8 +153,8 @@ function LayoutBrush() {
                 .scale(x)
                 .orient("bottom")
                 .ticks(25, 's'))
-        .selectAll("text")
-            .text(function(d) { return 2* d})
+        // .selectAll("text")
+        //     .text(function(d) { return 2* d})
             // .style("text-anchor", null);
 
                 // .tickSize(-_('gridSizeY')));
@@ -193,13 +193,10 @@ function LayoutBrush() {
           // // dot.classed("selected", function(d) { return extent[0] <= d && d <= extent[1]; });
           // // console.log(extent, _('activeData'));
           // drawHeatMap(true);
-          var extent = _('brush').extent();
-          _('activeData', _("dataMatrix").filter(function(d,i) {
-            return Math.round(extent[0]) <= i*2 && i*2 <= Math.round(extent[1])
-          }));
+        filterByTime()
           // dot.classed("selected", function(d) { return extent[0] <= d && d <= extent[1]; });
-          console.log(extent, _('activeData'));
-          drawHeatMap(true);
+          // console.log(extent, _('activeData'));
+        drawHeatMap({});
     }
 
     function brushend() {
