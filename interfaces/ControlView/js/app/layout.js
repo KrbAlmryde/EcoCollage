@@ -9,6 +9,9 @@ function LayoutDraw(data) {
 
 function LayoutButtons() {
     var images = ['depth', 'extent', 'onset', 'persistence']
+
+    var layer = d3.select("#layerControl");
+
     d3.select("#layerControl")
         .selectAll(".layer")
             .data(images).enter()
@@ -124,7 +127,7 @@ function LayoutGrid(data) {
 
                 var x = (d.x *_("gridSizeX")) + 50,
                     y = (24 - d.y) *_("gridSizeY") + 50;
-                var val = parseInt(_('heatmapInstance').getValueAt({ x: x, y:y }))
+                var val = parseInt(_('heatmapInstance').getValueAt({ x: x, y:y })) || 0
                 console.log("val is?", val);
                 publishMessage('ambient-layer', val);
                 console.log(d, x, y, val);
