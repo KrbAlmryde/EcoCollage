@@ -288,6 +288,7 @@ function loadLiquidFillGauge(value) {
             } else {
                 newClipArea = clipArea;
             }
+            // debugger
 
             var newWavePosition = config.waveAnimate?waveAnimateScale(1):0;
             wave.transition()
@@ -314,16 +315,25 @@ function loadLiquidFillGauge(value) {
 }
 
         function InitMosquitos(Num){
-            var canvas = document.createElement("canvas"),
+            var div=document.getElementById("mosquito");
+            var canvas = document.getElementById("canvas"),
             c =canvas.getContext("2d"),
             particles = {},
             particleIndex =0,
             particleNum = Num;//put (Num) here
 
+
+
             // draw black background rectangle
-            canvas.width =400;
-            canvas.height= 400;
-            document.body.appendChild(canvas);
+            canvas.width ="430";
+            canvas.height= "500";
+            canvas.position="absolute";
+            // canvas.padding-left="20px";
+            // canvas.padding-top="5px";
+            c.clearRect(0,0,canvas.width,canvas.height)
+            // document.body.appendChild(canvas);
+            div.appendChild(canvas);
+
             c.fillStyle ="white";
             c.fillRect(0,0,canvas.width,canvas.height);
             //-----------
@@ -384,16 +394,19 @@ function loadLiquidFillGauge(value) {
             for(var i=0;i<count;i++)
             {
                 var random = Math.floor(Math.random() * (max - min + 1)) + min;
-                img = '<img src="js/assets/p'+random+'.jpg" height="43px" width="43px">';
+                img = '<img src="js/assets/p'+random+'.jpg" height="60px" width="60px">';
                 img_element+=img;
             }
             // console.log(img_element);
-            var div = document.createElement('div');
+            var div = document.getElementById('sickpeople');
+            // var div = document.createElement('div');
+            // div.setAttribute("style","width:500px");
+
             div.innerHTML = img_element;
 
-            var heading = document.createElement('div');
-            heading.innerHTML = '<h3><center>Number of Sick People</h3>';
-            document.body.appendChild(heading);
-            document.body.appendChild(div);
+            // var heading = document.getElementById('heading3');
+            // heading.innerHTML = '<h3><center>Number of Sick People</h3>';
+            // document.body.appendChild(heading);
+        // first.appendChild(div);
         }
 

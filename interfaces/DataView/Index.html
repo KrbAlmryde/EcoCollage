@@ -6,10 +6,84 @@
     <meta name="description" content="EcoCollage Ambient Comparison View">
     <style>
         .sinkText { font-family: Helvetica; font-weight: bold; }
+
+#wrapper1 {
+  width:100%;
+  height:8%;
+  clear:both;
+}
+#heading1 {
+    width:35%;
+    height:100%;
+    float:left;
+}
+#heading2 {
+    width:30%;
+    height:100%;
+    float:left;
+}
+#heading3 {
+    width:33%;
+    height:100%;
+    float:left;
+}
+
+#wrapper2 {
+  width:100%;
+  height:60%;
+  clear:both;
+}
+#first {
+    width:35%;
+    height:100%;
+    float:left;
+}
+#mosquito {
+    width:30%;
+    height:100%;
+    float:left;
+}
+#sickpeople {
+    width:33%;
+    height:100%;
+    float:left;
+}
+body, html {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+}
+
     </style>
 </head>
 <body>
-    <svg id="fillgauge" width="500" height="500"></svg>
+
+<!-- <div style="width: 100%; height: 500; display: table;">
+  <div id="row1" style="width: 50%; display: table-row;">
+    <div id="divfillguage" width="30%" height="500" style="display: table-cell;">
+        <svg id="fillgauge" width="500" height="500"></svg>
+    </div>
+    <div id="mosquito" width="30%" height="500" style="display: table-cell;"></div>
+    <div id="sickpeople" width="30%" height="500" style="display: table-cell;"></div>
+    <div id="row2" style="width: 50%; display: table-row;">
+</div>
+</div> -->
+
+<div id="wrapper1">
+  <div id="heading1"><center><h1>Water Depth</h1></center></div>
+  <div id="heading2"><center><h1>Mosquito Population</h1></center></div>
+  <div id="heading3"><center><h1>Number Of Sick People</h1></center></div>
+</div>
+
+<div id="wrapper2">
+  <div id="first">
+        <svg id="fillgauge" width="100%" height="100%"></svg>
+  </div>
+  <div id="mosquito"><canvas id="canvas"></canvas></div>
+  <div id="sickpeople"></div>
+</div>
+
+
 
     <!-- External Libraries -->
     <script type="text/javascript" src="js/lib/d3/d3.js"></script>
