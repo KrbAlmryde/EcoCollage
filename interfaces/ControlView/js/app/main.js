@@ -8,9 +8,16 @@ function Start() {
     _("gridSizeY", Math.floor( _("width") / 25 ) )
     _("colors", ['#e7e8e9', '#e1ecf8', '#e3f1da', "#fef5df"] )
     _("mappingType", 1);  // 0: extent, 1: persistence, 2: onset, 3: depth
+    _("scene", new THREE.Scene() );
+    _("camera", new THREE.PerspectiveCamera(45, _("width") / _("height"), 0.1, 1000) );
+    _("renderer", new THREE.WebGLRenderer() );
+    _("controls", {} ),
+    _('averageDepth', 0), _('maxDepth', 0), _('minDepth', 0),
+    _('averagePersistence', 0), _('maxPersistence', 0), _('minPersistence', 0),
 
     _("queue")
-        .defer(d3.tsv, 'js/assets/grid.tsv')
+        // .defer(d3.tsv, 'js/assets/grid.tsv')
+        .defer(d3.json, "js/assets/blueIslandElevation.json")
         .defer(d3.tsv, 'js/data/standingWater.tsv')
         .defer(d3.tsv, 'js/data/maxWaterHeights.tsv')
         .await(OnCreate)
@@ -33,6 +40,10 @@ function configureData(data, mdata) {
         d.time = +d.time
         d.x = +d.x
         d.y = +d.y
+        if (_('maxDepth') < d.depth)
+            _('maxDepth', d.depth)
+        if ( _('minDepth') > d.depth)
+             _('minDepth' ,d.depth )
     })
     var nestByTime = d3.nest()
         .key(function(d) { return d.time })

@@ -29,13 +29,13 @@ function filterByTime() {
 function drawDataToMap() {
     switch( _("mappingType") ){
         case 0:
-            mapExtent();
+            mapGrid();
             break;
         case 1:
-            mapPersistence();
+            mapSatellite()
             break;
         case 2:
-            mapOnset()
+            mapPersistence();
             break;
         case 3:
             mapDepth();
@@ -47,15 +47,27 @@ function drawDataToMap() {
 
 
 
-function mapExtent() {
+function mapGrid() {
     _("mappingType", 0)
-    console.log("Implement me!!")
+    var texture = new THREE.TextureLoader().load('js/assets/fullSizeBlueIsland.png');
+    texture.wrapS = THREE.ClampToEdgeWrapping;
+    texture.wrapT = THREE.ClampToEdgeWrapping;
+    _('plane').material = material = new THREE.MeshPhongMaterial({ map: texture });
+
 };
 
 
+function mapSatellite() {
+    _("mappingType", 1)
+    var texture = new THREE.TextureLoader().load('js/assets/blueIslandOverlay.png');
+    texture.wrapS = THREE.ClampToEdgeWrapping;
+    texture.wrapT = THREE.ClampToEdgeWrapping;
+    _('plane').material = material = new THREE.MeshPhongMaterial({ map: texture });
+
+}
 
 function mapPersistence() {
-    _("mappingType", 1)
+    _("mappingType", 2)
 
     var config = {
         // backgroundColor to cover transparent areas
@@ -64,13 +76,13 @@ function mapPersistence() {
         gradient: {
         // enter n keys between 0 and 1 here
         // for gradient color customization
-        '.2': 'white',
+        '.3': 'white',
         '.5': 'green',
         '.8': 'yellow',
         '.95': 'red'
         },
         // the maximum opacity (the value with the highest intensity will have it)
-        maxOpacity: .5,
+        maxOpacity: .9,
         // minimum opacity. any value > 0 will produce
         // no transparent gradient transition
         minOpacity: 0.0001
@@ -85,15 +97,23 @@ function mapPersistence() {
             return Array.apply(null, Array(25)).map(Number.prototype.valueOf,0);
         })
 
-        console.log('calculatePersistence', _('activeData'));
 
         _('activeData').forEach(function(T){
             T.forEach(function(row){
+                console.log('calculatePersistence', _('activeData'));
                 row.forEach(function(obj) {
                     var val = 0;
-                    if (+obj.depth >= 6.0) val = 1
-                    ndata[+obj.x][+obj.y] += val;
-                    // console.log(+obj.x, +obj.y, ndata[+obj.x][+obj.y], "ndata", +obj.depth);
+                    // 6.0 mill or 6.0 inches (150mm)?
+                    if (+obj.depth >= 150.0) val = 1
+
+                    if (val === 0)
+                        ndata[+obj.x][+obj.y] = val;
+                    else
+                        ndata[+obj.x][+obj.y] += val;
+
+                    if (ndata[+obj.x][+obj.y] > 0) {
+                        console.log(+obj.x, +obj.y, ndata[+obj.x][+obj.y] > 0, "ndata", +obj.depth);
+                    }
                 })
             })
         })
@@ -128,20 +148,14 @@ function mapPersistence() {
         var datapoints = { max: max, min:min, data: points }
         _("heatmapInstance").setData(datapoints)
         _("heatmapInstance").configure(config)
-
+        update3DMap();
+        publishMessage("ambient-layer", {config: 'persistance', data: max})
+        // publishMessage("ambient-layer", max)
         if (_('publish'))
             publishMessage("projection-layer", {note: 'Inbound Data!', config: config, data: datapoints } )
-
     }
 
 }
-
-
-function mapOnset() {
-    _("mappingType", 2)
-    console.log("Implement me!!")
-};
-
 
 
 function mapDepth() {
@@ -195,15 +209,26 @@ function mapDepth() {
         console.log("points", max);
         // if you have a set of datapoints always use setData instead of addData
         // for data initialization
-        var datapoints = { max: max, min:min, data: points }
+        var datapoints = { max: _('maxDepth'), min:_('minDepth'), data: points }
         _("heatmapInstance").setData( datapoints )
         _("heatmapInstance").configure(config)
-
+        update3DMap()
+        publishMessage("ambient-layer", {config: 'depth', data: max * 0.0393701 })
         if (_('publish'))
             publishMessage("projection-layer", {note: 'Inbound Data!', config: config, data: datapoints } )
     }
 };
 
+
+
+
+function update3DMap() {
+    var texture = new THREE.CanvasTexture( document.getElementsByClassName('heatmap-canvas')[0] );
+    texture.wrapS = THREE.ClampToEdgeWrapping;
+    texture.wrapT = THREE.ClampToEdgeWrapping;
+    _('plane').material = material = new THREE.MeshPhongMaterial({ map: texture });
+
+}
 
 
 
@@ -233,5 +258,6 @@ function drawHeatMap(config) {
     // for data initialization
     _("heatmapInstance").setData({ max: max, min:min, data: points })
     _("heatmapInstance").configure(config)
+    update3DMap()
 }
 

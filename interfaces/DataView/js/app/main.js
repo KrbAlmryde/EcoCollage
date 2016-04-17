@@ -1,7 +1,7 @@
 
 function Start() {
     initNutellaComponents();
-    _("floodGauge", loadLiquidFillGauge(0));
+    _("floodGauge", loadLiquidFillGauge(10));
 }
 
 
@@ -32,8 +32,8 @@ function liquidFillGaugeDefaultSettings(){
 }
 
 
-var width = 1000,
-    height = 1000
+var width = 500,
+    height = 500
 
 
 // var thing = loadLiquidFillGauge(0);
@@ -47,14 +47,16 @@ function loadLiquidFillGauge(value) {
     console.log(radius);
     var locationX = width/2 - radius;
     var locationY = height/2 - radius;
-    var fillPercent = Math.max(config.minValue, Math.min(config.maxValue, value))/config.maxValue;
-    console.log(fillPercent + "value = "+value);
+    var fillPercent = value/72 ;//Math.max(config.minValue, Math.min(config.maxValue, value))/config.maxValue;
+
+    getFillPercentImage(value)
+    // console.log(fillPercent + "value = "+value);
 
     gauge.append("image")
-         .attr("width", 800)
-         .attr("height", 1200)
-         .attr('transform','translate('+120+','+ -100+')')
-         .attr("xlink:href", "js/assets/flowerpot.png ")  //
+         .attr("width", width*0.8)
+         .attr("height", height*.8)
+         .attr('transform','translate('+width*.1+','+ 40+')')
+         .attr("xlink:href", getFillPercentImage(value))  //
          console.log(locationY + " " + locationX)
 
     var waveHeightScale;
@@ -228,27 +230,23 @@ function loadLiquidFillGauge(value) {
             });
     }
 
+    function getFillPercentImage(value) {
+        var fillPercent = value/100;
+        var key = Math.floor(Math.random() * 4+1);
+
+        console.log(fillPercent + "value = "+value);
+
+        if( fillPercent<= 0.1 )
+            return "js/assets/smile"+key+".jpg";
+        else if(fillPercent>0.1 )
+            return "js/assets/sad"+key+".jpg";
+    }
+
     function GaugeUpdater(){
         this.update = function(value){
-            console.log("value WAS", value);
-            if (value < 24.0){
-                value = (value / 24) * 100; // convert the value to normalized coordinates
-                d3.select("image").attr("xlink:href", "js/assets/flowerpot.png")
-
-            } else if (value < 36.0 && value > 24.0) {
-                value = (value / 36) * 100; // convert the value to normalized coordinates
-                d3.select("image").attr("xlink:href", "js/assets/man_smile.png")
-
-            } else if (value > 36.0 && value < 72.0) {
-                value = (value / 72) * 100; // convert the value to normalized coordinates
-                d3.select("image").attr("xlink:href", "js/assets/man_sad.png")
-
-            } else {
-                value = (value / 360) * 100; // convert the value to normalized coordinates
-                d3.select("image").attr("xlink:href", "js/assets/house.png")
-            }
-            console.log("value is", value);
-
+            console.log("update!", value);
+            var fillPercent=value/72;
+            d3.select("image").attr("xlink:href", getFillPercentImage(value))
             var newFinalValue = parseFloat(value).toFixed(2);
             var textRounderUpdater = function(value){ return Math.round(value); };
             if(parseFloat(newFinalValue) != parseFloat(textRounderUpdater(newFinalValue))){
@@ -314,3 +312,88 @@ function loadLiquidFillGauge(value) {
 
     return new GaugeUpdater();
 }
+
+        function InitMosquitos(Num){
+            var canvas = document.createElement("canvas"),
+            c =canvas.getContext("2d"),
+            particles = {},
+            particleIndex =0,
+            particleNum = Num;//put (Num) here
+
+            // draw black background rectangle
+            canvas.width =400;
+            canvas.height= 400;
+            document.body.appendChild(canvas);
+            c.fillStyle ="white";
+            c.fillRect(0,0,canvas.width,canvas.height);
+            //-----------
+            // Mosquitos function
+            function Particle(){
+                this.x = canvas.width/(Math.random() *10 -5);
+                this.y = canvas.height/(Math.random() *10 -5);
+                this.vx = Math.random() *10 -5;
+                this.vy = Math.random() *10 -5;
+                particleIndex++;
+                particles[particleIndex] =this;
+                this.id = particleIndex;
+                this.life =0;
+                this.maxLife = Math.random() *30+40;
+
+            }
+
+            Particle.prototype.draw = function(){
+                this.x +=this.vx;
+                this.y +=this.vy;
+                this.life++;
+
+                if (Math.random() <0.1){
+                    this.vx = Math.random() *10-5;
+                    this.vy = Math.random() *10-5;
+                }
+
+                if (this.life >= this.maxLife) {
+                    delete particles[this.id];
+                }
+
+                c.fillStyle="rgba(25,25,25,0.5)";
+                c.fillRect(this.x,this.y,10,10);
+            }
+
+            setInterval(function(){
+                c.fillStyle ="rgba(255,255,255,0.2)";
+                c.fillRect(0,0,canvas.width,canvas.height);
+
+                for(var i=0 ; i <= particleNum; i++) {
+                    new Particle();
+                }
+
+                for (var i in particles){
+                    particles[i].draw();
+                }
+
+            }, 30);
+
+        };
+
+        function sickPeople(count)
+        {
+            var img_element = "";
+            var img;
+            var min = 1;
+            var max = 3;
+            for(var i=0;i<count;i++)
+            {
+                var random = Math.floor(Math.random() * (max - min + 1)) + min;
+                img = '<img src="js/assets/p'+random+'.jpg" height="43px" width="43px">';
+                img_element+=img;
+            }
+            // console.log(img_element);
+            var div = document.createElement('div');
+            div.innerHTML = img_element;
+
+            var heading = document.createElement('div');
+            heading.innerHTML = '<h3><center>Number of Sick People</h3>';
+            document.body.appendChild(heading);
+            document.body.appendChild(div);
+        }
+

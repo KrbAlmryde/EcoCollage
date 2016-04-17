@@ -1,6 +1,7 @@
 function LayoutDraw(data) {
-    LayoutGrid(data)
-    LayoutBackground('js/assets/blueIslandOverlay.png')
+    // LayoutGrid(data)
+    Layout3DMap(data)
+    // LayoutBackground('js/assets/blueIslandOverlay.png')
     LayoutHeatMap();
     LayoutButtons();
     LayoutBrush();
@@ -8,7 +9,7 @@ function LayoutDraw(data) {
 
 
 function LayoutButtons() {
-    var images = ['depth', 'extent', 'onset', 'persistence']
+    var images = ['grid', 'satellite', 'persistence', 'depth' ]
 
     var layer = d3.select("#layerControl");
 
@@ -30,9 +31,9 @@ function LayoutButtons() {
                 switch(d) {
                     case 'persistence': mapPersistence();
                         break;
-                    case 'extent': mapExtent();
+                    case 'grid': mapGrid();
                         break;
-                    case 'onset': mapOnset();
+                    case 'satellite': mapSatellite();
                         break;
                     case 'depth': mapDepth();
                         break;
@@ -43,7 +44,7 @@ function LayoutButtons() {
 
     d3.select("#interfaceControl")
         .selectAll(".button")
-            .data(['send-button.svg', "start.png"]).enter()
+            .data(['send-button.svg']).enter()
         .append('img')
           .attr("src", function(d) { return "js/assets/"+d } )
           .attr("width", "10%")
@@ -80,7 +81,12 @@ function LayoutHeatMap(){
         blur: .75
 
     }))
+    var texture = new THREE.CanvasTexture( document.getElementsByClassName('heatmap-canvas')[0] );
+    texture.wrapS = THREE.ClampToEdgeWrapping;
+    texture.wrapT = THREE.ClampToEdgeWrapping;
+    _('plane').material = material = new THREE.MeshPhongMaterial({ map: texture });
 }
+
 
 function LayoutBackground(url) {
     d3.select('#parent #background')
@@ -112,7 +118,7 @@ function LayoutGrid(data) {
             .attr('height', _("gridSizeY") )
             .attr('class', function(d) { return d.x + '-' + d.y })
             .style('fill', function(d) { return _("colors")[+d.type] })
-            .style('fill-opacity', 0.2)
+            .style('fill-opacity', 0.6)
             .style('stroke', '#000')
             .style('stroke-opacity', 0.2)
             .classed('selected', false)
@@ -129,11 +135,10 @@ function LayoutGrid(data) {
                     y = (24 - d.y) *_("gridSizeY") + 50;
                 var val = parseInt(_('heatmapInstance').getValueAt({ x: x, y:y })) || 0
                 console.log("val is?", val);
-                publishMessage('ambient-layer', val);
+                publishMessage('ambient-layer', val * 0.0393701);// scale to be in inches
                 console.log(d, x, y, val);
             })
 }
-
 
 
 function LayoutBrush() {
@@ -250,4 +255,54 @@ function LayoutBrush() {
             return !centering;
         })
     }
+}
+
+
+
+function Layout3DMap(data) {
+    _("renderer").setSize(  _("width") + _("margin").left + _("margin").right, _("height") + _("margin").top + _("margin").bottom  );
+
+    _("renderer").setClearColor(rgbToHex(255,255,255))
+    document.getElementById('graph').appendChild( _("renderer").domElement);
+
+    _("camera").position.set(9.20, 3.3, 79);
+    _("controls", new THREE.TrackballControls( _("camera"), _("renderer").domElement)); {
+        _("controls").rotateSpeed = 4.0;
+        _("controls").zoomSpeed = 1.5;
+        _("controls").panSpeed = 1.0;
+
+        _("controls").noZoom = false;
+        _("controls").noPan = false;
+
+        _("controls").staticMoving = false;
+        _("controls").dynamicDampingFactor = 0.3;
+
+        _("controls").keys = [65, 83, 68];
+        // _("controls").enabled = true;
+    }
+
+    _("scene").add(new THREE.AmbientLight(0xeeeeee));
+
+    var extents = d3.extent(data, d => +d.elevation);
+    console.log(data, extents);
+
+    var geometry = new THREE.PlaneGeometry(60, 60, 239, 239);
+    console.log(geometry.vertices.length);
+    for (var i = 0, l = geometry.vertices.length; i < l; i++) {
+        geometry.vertices[i].z = +data[i].elevation - +extents[0];
+    }
+
+    // instantiate a loader
+    var texture = new THREE.TextureLoader().load('js/assets/fullSizeBlueIsland.png');
+    var material = new THREE.MeshPhongMaterial({ map: texture });
+    _("plane", new THREE.Mesh(geometry, material) );
+    _("scene").add(_("plane"));
+
+    LayoutRender();
+}
+
+function LayoutRender() {
+    _("controls").update();
+    requestAnimationFrame(LayoutRender);
+    _("renderer").render( _("scene"), _("camera"));
 }

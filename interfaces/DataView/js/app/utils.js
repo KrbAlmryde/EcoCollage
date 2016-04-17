@@ -74,5 +74,15 @@ function adminMessageCallBack(message, from) {
 
     // 1. Subscribing to a channel
     console.log("Message from", from.component_id, ":", message);
-    _("floodGauge").update(+message.data);
+
+    if (message.config === 'depth')
+        _("floodGauge").update(+message.data);
+    else if (message.config === 'persistance'){
+        d3.selectAll('canvas').remove();
+        d3.selectAll('div h3').remove();
+        d3.selectAll('div img').remove();
+        sickPeople(+message.data);
+        InitMosquitos(+message.data);
+    }
+
 }
