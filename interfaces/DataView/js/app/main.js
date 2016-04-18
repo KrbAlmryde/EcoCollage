@@ -334,8 +334,10 @@ function loadLiquidFillGauge(value) {
             // document.body.appendChild(canvas);
             div.appendChild(canvas);
 
-            c.fillStyle ="white";
-            c.fillRect(0,0,canvas.width,canvas.height);
+            // c.fillStyle ="white";
+            // c.fillRect(0,0,canvas.width,canvas.height);
+            // c.fillStyle="rgba(25,25,25,0.5)";
+            //     c.fillRect(this.x,this.y,10,10);
             //-----------
             // Mosquitos function
             function Particle(){
@@ -347,23 +349,23 @@ function loadLiquidFillGauge(value) {
                 particles[particleIndex] =this;
                 this.id = particleIndex;
                 this.life =0;
-                this.maxLife = Math.random() *30+40;
+                this.maxLife = Math.random() *30+100;
 
             }
 
             Particle.prototype.draw = function(){
                 this.x +=this.vx;
                 this.y +=this.vy;
-                this.life++;
+                // this.life++;
 
-                if (Math.random() <0.1){
-                    this.vx = Math.random() *10-5;
-                    this.vy = Math.random() *10-5;
-                }
+                // if (Math.random() <0.1){
+                //     this.vx = Math.random() *10-5;
+                //     this.vy = Math.random() *10-5;
+                // }
 
-                if (this.life >= this.maxLife) {
-                    delete particles[this.id];
-                }
+                // if (this.life >= this.maxLife) {
+                //     delete particles[this.id];
+                // }
 
                 c.fillStyle="rgba(25,25,25,0.5)";
                 c.fillRect(this.x,this.y,10,10);
@@ -381,7 +383,7 @@ function loadLiquidFillGauge(value) {
                     particles[i].draw();
                 }
 
-            }, 30);
+            }, 50);
 
         };
 
