@@ -320,7 +320,7 @@ function loadLiquidFillGauge(value) {
             c =canvas.getContext("2d"),
             particles = {},
             particleIndex =0,
-            particleNum = Num;//put (Num) here
+            particleNum = 0;
 
 
 
@@ -328,10 +328,7 @@ function loadLiquidFillGauge(value) {
             canvas.width ="430";
             canvas.height= "500";
             canvas.position="absolute";
-            // canvas.padding-left="20px";
-            // canvas.padding-top="5px";
-            c.clearRect(0,0,canvas.width,canvas.height)
-            // document.body.appendChild(canvas);
+            c.clearRect(0,0,canvas.width,canvas.height);
             div.appendChild(canvas);
 
             // c.fillStyle ="white";
@@ -349,29 +346,49 @@ function loadLiquidFillGauge(value) {
                 particles[particleIndex] =this;
                 this.id = particleIndex;
                 this.life =0;
-                this.maxLife = Math.random() *30+100;
+                this.maxLife = Math.random();
+                if (Num >=0 && Num <=5 ){
+                    particleNum =0;
+                     this.maxLife*=10+40;
+                  }
+                else if (Num <=10){
+                    particleNum =1;
+                     this.maxLife*=20+40;
+                  }
+                else if (Num <= 15){
+                     particleNum =2;
+                    this.maxLife*=30+30;
+                  }
+                else if (Num <= 20){
+                     particleNum =5;
+                    this.maxLife*=50+50;
+                  }
+                else
+                       { particleNum =10;
+                        this.maxLife*=100+100;
+                  }
 
             }
 
             Particle.prototype.draw = function(){
                 this.x +=this.vx;
                 this.y +=this.vy;
-                // this.life++;
+                this.life++;
 
-                // if (Math.random() <0.1){
-                //     this.vx = Math.random() *10-5;
-                //     this.vy = Math.random() *10-5;
-                // }
+                if (Math.random() <0.1){
+                    this.vx = Math.random() *10-5;
+                    this.vy = Math.random() *10-5;
+                }
 
-                // if (this.life >= this.maxLife) {
-                //     delete particles[this.id];
-                // }
+                if (this.life >= this.maxLife) {
+                    delete particles[this.id];
+                }
 
                 c.fillStyle="rgba(25,25,25,0.5)";
                 c.fillRect(this.x,this.y,10,10);
             }
 
-            setInterval(function(){
+            setInterval(function(Num){
                 c.fillStyle ="rgba(255,255,255,0.2)";
                 c.fillRect(0,0,canvas.width,canvas.height);
 
