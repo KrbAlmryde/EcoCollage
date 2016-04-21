@@ -47,7 +47,7 @@ function loadLiquidFillGauge(value) {
     console.log(radius);
     var locationX = width/2 - radius;
     var locationY = height/2 - radius;
-    var fillPercent = value/72 ;//Math.max(config.minValue, Math.min(config.maxValue, value))/config.maxValue;
+    var fillPercent = value/100 ;//Math.max(config.minValue, Math.min(config.maxValue, value))/config.maxValue;
 
     getFillPercentImage(value)
     // console.log(fillPercent + "value = "+value);
