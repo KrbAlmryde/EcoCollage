@@ -325,8 +325,8 @@ function loadLiquidFillGauge(value) {
 
 
             // draw black background rectangle
-            canvas.width ="430";
-            canvas.height= "500";
+            canvas.width ="540";
+            canvas.height= "530";
             canvas.position="absolute";
             c.clearRect(0,0,canvas.width,canvas.height);
             div.appendChild(canvas);
